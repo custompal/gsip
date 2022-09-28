@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if config, err := examples.ReadConfig("config.json"); err != nil {
+	if config, err := examples.ReadConfig("my_config.json"); err != nil {
 		fmt.Printf("读取配置文件失败:%s", err.Error())
 	} else {
 		go func() {
