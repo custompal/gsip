@@ -6,7 +6,6 @@ import (
 	"net"
 	"runtime"
 	"strings"
-	"syscall"
 )
 
 var (
@@ -18,14 +17,6 @@ type transportHandler interface {
 	onConnect(conn net.Conn)
 	onDisconnect(conn net.Conn)
 	onPacket(con net.Conn, isTCP bool, data []byte, length int)
-}
-
-func reusePortControl(network, address string, c syscall.RawConn) error {
-	return c.Control(func(fd uintptr) {
-		if runtime.GOOS != "darwin" {
-			syscall.SetsockoptInt(syscall.Handle(fd), syscall.SOL_SOCKET, 0x4, 1)
-		}
-	})
 }
 
 type ITransport interface {
