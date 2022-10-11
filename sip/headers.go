@@ -721,4 +721,18 @@ func (s *Subject) Clone() Header {
 	return &subject
 }
 
+type Date string
+
+func (d *Date) Value() string {
+	return string(*d)
+}
+
+func (d *Date) Name() string {
+	return DateName
+}
+
+func (d *Date) Clone() Header {
+	return &*d
+}
+
 type Allow string

@@ -111,6 +111,14 @@ func createDialog(stack *Stack, listeningPoint *ListeningPoint, request *Request
 	return dialog
 }
 
+func (d *Dialog) GetSeqNum(uas bool) int {
+	if uas {
+		return int(*d.remoteSeqNumber)
+	} else {
+		return int(*d.localSeqNumber)
+	}
+}
+
 func (d *Dialog) SendAck(request *Request) error {
 	return d.listeningPoint.SendRequest(request)
 }

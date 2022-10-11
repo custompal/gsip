@@ -343,7 +343,7 @@ func (m *message) setLocalHostPort(ip string, port int) {
 }
 
 func processMessage(listeningPoint *ListeningPoint, stack *Stack, conn net.Conn, tcp bool, data []byte, length int) error {
-	msg, isRequest, err := parseMessage(data, length)
+	msg, isRequest, err := parseMessage(conn, data, length)
 	if err != nil {
 		return err
 	}
@@ -398,7 +398,7 @@ func processMessage(listeningPoint *ListeningPoint, stack *Stack, conn net.Conn,
 	return nil
 }
 
-func parseMessage(data []byte, length int) (Message, bool, error) {
+func parseMessage(conn net.Conn, data []byte, length int) (Message, bool, error) {
 	first, isRequest := true, false
 	offset, index := 0, 0
 	var msg Message
@@ -490,6 +490,16 @@ func parseMessage(data []byte, length int) (Message, bool, error) {
 
 	if msg == nil {
 		return nil, false, fmt.Errorf("the message parse failed")
+	}
+
+	if !isRequest {
+		response := msg.(*Response)
+		if isDialogCreated(response.cSeq.Method) && response.GetStatusCode() == OK && response.Contact() == nil {
+			hop := getHostPort(conn.RemoteAddr())
+			uri := NewSipUri(response.To().User(), hop.IP, hop.Port)
+			contact := Contact{Address: NewAddress(uri)}
+			msg.SetHeader(&contact)
+		}
 	}
 
 	if err := msg.CheckHeaders(); err != nil {

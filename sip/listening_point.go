@@ -45,7 +45,7 @@ func (l *ListeningPoint) onDisconnect(conn net.Conn) {
 func (l *ListeningPoint) onPacket(conn net.Conn, tcp bool, data []byte, length int) {
 	err := processMessage(l, l.sipStack, conn, tcp, data, length)
 	if err != nil {
-		fmt.Printf("%s:%s", err.Error(), string(data[:length]))
+		fmt.Printf("%s:%s\n", err.Error(), string(data[:length]))
 	}
 }
 

@@ -457,7 +457,11 @@ func (G *GBUA) OnRequest(event *sip.RequestEvent) {
 		expires := event.Request.Expires()
 
 		response := event.Request.CreateResponse(sip.OK)
-		response.SetToTag(sip.GenerateTag())
+		if event.Request.To().Tag == "" {
+			response.SetToTag(sip.GenerateTag())
+		} else {
+			response.SetToTag(event.Request.To().Tag)
+		}
 		response.SetHeader(device.contactHeader)
 		response.SetExpires(int(*expires))
 		event.ServerTransaction.SendResponse(response)

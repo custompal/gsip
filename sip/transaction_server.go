@@ -32,6 +32,8 @@ func (t *ServerTransaction) SendResponse(response *Response) {
 				dialog = createDialog(t.sipStack, t.listeningPoint, t.originalRequest, response, true)
 				t.dialog = dialog
 				t.sipStack.addDialog(id, dialog)
+			} else {
+				t.dialog = dialog
 			}
 		}
 	}
@@ -168,9 +170,9 @@ func (t *ServerTransaction) processRequest(request *Request) {
 			if request.GetRequestMethod() == ACK {
 				t.stateMachine.setState(inviteServerStateConfirmed)
 				go t.sipStack.EventListener.OnRequest(&RequestEvent{request, nil, t})
-			} else if t.finalResponseBytes != nil {
-				sendMessage(t.conn, t.finalResponseBytes, t)
 			}
+		} else if inviteServerStateTerminated == t.stateMachine.getState() && t.finalResponseBytes != nil {
+			sendMessage(t.conn, t.finalResponseBytes, t)
 		}
 	} else {
 		d, _ := t.sipStack.findDialog(request.GetDialogId(true))
@@ -183,6 +185,8 @@ func (t *ServerTransaction) processRequest(request *Request) {
 			go t.sipStack.EventListener.OnRequest(&RequestEvent{request, d, t})
 		} else if unInviteServerStateProceeding == t.stateMachine.getState() && t.provisionalResponseBytes != nil {
 			sendMessage(t.conn, t.provisionalResponseBytes, t)
+		} else if unInviteServerStateCompleted == t.stateMachine.getState() && t.finalResponseBytes != nil {
+			sendMessage(t.conn, t.finalResponseBytes, t)
 		}
 	}
 }

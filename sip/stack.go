@@ -126,6 +126,10 @@ func (stack *Stack) findDialog(id string) (*Dialog, bool) {
 	return nil, false
 }
 
+func (stack *Stack) FindDialog(id string) (*Dialog, bool) {
+	return stack.findDialog(id)
+}
+
 func (stack *Stack) removeDialog(id string) *Dialog {
 	if remove, b := stack.dialogs.Remove(id); b {
 		return remove.(*Dialog)
@@ -143,6 +147,10 @@ func (stack *Stack) findTransaction(id string, isServer bool) (interface{}, bool
 	} else {
 		return stack.clientTransactions.Find(id)
 	}
+}
+
+func (stack *Stack) FindTransaction(id string, isServer bool) (interface{}, bool) {
+	return stack.findTransaction(id, isServer)
 }
 
 func (stack *Stack) addTransaction(id string, tx interface{}, isServer bool) {
