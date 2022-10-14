@@ -15,7 +15,7 @@ func TestParseStrMessage(t *testing.T) {
 	}
 	for _, msg := range msgs[1:2] {
 		bytes := []byte(msg)
-		message, _, err := parseMessage(bytes, len(bytes))
+		message, _, err := parseMessage(nil, bytes, len(bytes))
 		println(message)
 		println(err)
 	}

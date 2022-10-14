@@ -146,6 +146,9 @@ func (via *Via) MAddr() string {
 	return via.mAddr
 }
 
+func (via *Via) SetBranch(branch string) {
+	via.setBranch(branch)
+}
 func (via *Via) setBranch(branch string) {
 	via.branch = branch
 	via.files["branch"] = branch
@@ -153,6 +156,9 @@ func (via *Via) setBranch(branch string) {
 func (via *Via) setReceived(received string) {
 	via.received = received
 	via.files["received"] = received
+}
+func (via *Via) SetRPort(port int) {
+	via.setRPort(port)
 }
 func (via *Via) setRPort(port int) {
 	via.rPort = port

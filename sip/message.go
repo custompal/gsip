@@ -494,7 +494,7 @@ func parseMessage(conn net.Conn, data []byte, length int) (Message, bool, error)
 
 	if !isRequest {
 		response := msg.(*Response)
-		if isDialogCreated(response.cSeq.Method) && response.GetStatusCode() == OK && response.Contact() == nil {
+		if conn != nil && isDialogCreated(response.cSeq.Method) && response.GetStatusCode() == OK && response.Contact() == nil {
 			hop := getHostPort(conn.RemoteAddr())
 			uri := NewSipUri(response.To().User(), hop.IP, hop.Port)
 			contact := Contact{Address: NewAddress(uri)}

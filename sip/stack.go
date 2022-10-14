@@ -141,6 +141,10 @@ func (stack *Stack) addDialog(id string, dialog *Dialog) {
 	stack.dialogs.Add(id, dialog)
 }
 
+func (stack *Stack) AddDialog(id string, dialog *Dialog) {
+	stack.addDialog(id, dialog)
+}
+
 func (stack *Stack) findTransaction(id string, isServer bool) (interface{}, bool) {
 	if isServer {
 		return stack.serverTransactions.Find(id)

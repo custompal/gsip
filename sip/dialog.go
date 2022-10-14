@@ -111,6 +111,10 @@ func createDialog(stack *Stack, listeningPoint *ListeningPoint, request *Request
 	return dialog
 }
 
+func CreateDialog(stack *Stack, listeningPoint *ListeningPoint, request *Request, response *Response, uas bool) *Dialog {
+	return createDialog(stack, listeningPoint, request, response, uas)
+}
+
 func (d *Dialog) GetSeqNum(uas bool) int {
 	if uas {
 		return int(*d.remoteSeqNumber)
