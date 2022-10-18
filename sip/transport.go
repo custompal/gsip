@@ -75,7 +75,7 @@ func (u *UDPTransport) recv(conn interface{}) {
 	defer udp.Close()
 
 	for u.ctx.Err() == nil {
-		p := make([]byte, 1500)
+		p := make([]byte, 4096)
 		count, remote, err := udp.ReadFrom(p)
 		if err != nil {
 			fmt.Printf("udp recv failed: %v\n", err)
