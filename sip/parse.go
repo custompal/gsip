@@ -28,6 +28,7 @@ func init() {
 		AllowName:                parseIntOrStrHeader,
 		AuthenticationInfoName:   parseIntOrStrHeader,
 		AuthorizationName:        parseAuthorizationHeader,
+		AllowEventsName:          parseIntOrStrHeader,
 		CallIDName:               parseIntOrStrHeader,
 		CallIDShortName:          parseIntOrStrHeader,
 		CallInfoName:             parseIntOrStrHeader,

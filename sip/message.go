@@ -467,7 +467,8 @@ func parseMessage(conn net.Conn, data []byte, length int) (Message, bool, error)
 			}
 
 			if parser, ok := parsers[hName]; !ok {
-				return nil, false, fmt.Errorf("unknow header:%s", hName)
+				//return nil, false, fmt.Errorf("unknow header:%s", hName)
+				fmt.Printf("unknow header: %s\n", hName)
 			} else {
 				if header, err := parser(hName, hValue); err != nil {
 					return nil, false, err
