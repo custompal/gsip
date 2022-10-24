@@ -94,7 +94,7 @@ func (t *ClientTransaction) processResponse(response *Response) {
 			ack := t.createAck(response)
 			sendMessage(t.conn, ack.ToBytes(), t)
 		} else if code/2 == 100 && state <= inviteClientStateProceeding {
-			t.stateMachine.setState(inviteClientStateTerminated)
+			t.stateMachine.setState(inviteClientStateCompleted)
 			if dialog != nil {
 				dialog.state = dialogStateConfirmed
 			}

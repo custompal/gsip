@@ -193,7 +193,7 @@ func parseAddress(str string) (*Address, map[string]string, error) {
 func parseRequestLine(str string) (*RequestLine, error) {
 	split := strings.Split(str, " ")
 	if len(split) != 3 {
-		return nil, fmt.Errorf("the Request Line is invaild %s", str)
+		return nil, fmt.Errorf("the Request Line is invaild")
 	}
 
 	if uri, err := parseUri(split[1]); err != nil {

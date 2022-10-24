@@ -63,7 +63,7 @@ func (t *ServerTransaction) SendResponse(response *Response) {
 				panic("Contact StrHeader is mandatory for the OK to the INVITE")
 			}
 			dialog.state = dialogStateConfirmed
-			t.stateMachine.setState(inviteServerStateTerminated)
+			t.stateMachine.setState(inviteServerStateConfirmed)
 		}
 
 	} else if response.GetStatusCode() < 700 {
@@ -171,8 +171,10 @@ func (t *ServerTransaction) processRequest(request *Request) {
 				t.stateMachine.setState(inviteServerStateConfirmed)
 				go t.sipStack.EventListener.OnRequest(&RequestEvent{request, nil, t})
 			}
-		} else if inviteServerStateTerminated == t.stateMachine.getState() && t.finalResponseBytes != nil {
-			sendMessage(t.conn, t.finalResponseBytes, t)
+		} else if inviteServerStateConfirmed == t.stateMachine.getState() && t.finalResponseBytes != nil {
+			if request.GetRequestMethod() != ACK {
+				sendMessage(t.conn, t.finalResponseBytes, t)
+			}
 		}
 	} else {
 		d, _ := t.sipStack.findDialog(request.GetDialogId(true))
@@ -181,7 +183,11 @@ func (t *ServerTransaction) processRequest(request *Request) {
 		}
 
 		if unInviteServerStateTrying > t.stateMachine.getState() {
-			t.stateMachine.setState(unInviteServerStateTrying)
+			if ACK == request.GetRequestMethod() {
+				t.stateMachine.setState(unInviteServerStateCompleted)
+			} else {
+				t.stateMachine.setState(unInviteServerStateTrying)
+			}
 			go t.sipStack.EventListener.OnRequest(&RequestEvent{request, d, t})
 		} else if unInviteServerStateProceeding == t.stateMachine.getState() && t.provisionalResponseBytes != nil {
 			sendMessage(t.conn, t.provisionalResponseBytes, t)
