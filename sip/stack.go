@@ -79,9 +79,9 @@ func (stack *Stack) Start() error {
 
 		listen.sipStack = stack
 		listen.transport = server
-		if TCP == listen.Transport {
-			listen.tcpSessions = CreateSafeMap(10)
-		}
+		//if TCP == listen.Transport {
+		listen.tcpSessions = CreateSafeMap(10)
+		//}
 		server.setHandler(listen)
 	}
 

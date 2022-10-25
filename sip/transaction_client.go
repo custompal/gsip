@@ -2,6 +2,8 @@ package sip
 
 import (
 	"context"
+	"fmt"
+	"net"
 )
 
 type ClientTransaction struct {
@@ -161,18 +163,32 @@ func (t *ClientTransaction) SendRequest(onSuccess OnSuccess, onFailure OnFailure
 	if isDialogCreated(t.originalRequest.cSeq.Method) && t.originalRequest.Contact() == nil && t.listeningPoint.contact != nil {
 		t.originalRequest.SetHeader(t.listeningPoint.contact)
 	}
+
+	conn, err := t.listeningPoint.getConn(t.hop)
+	if err != nil {
+		t.terminated()
+		if onFailure != nil {
+			onFailure(newUACIOExceptionError(err))
+		}
+		return
+	}
+
+	t.SendRequestByConn(onSuccess, onFailure, conn)
+}
+
+func (t *ClientTransaction) SendRequestByConn(onSuccess OnSuccess, onFailure OnFailure, conn net.Conn) {
 	if err := t.originalRequest.CheckHeaders(); err != nil {
 		panic(err)
+	}
+	if conn == nil {
+		panic(fmt.Errorf("connection is nil"))
 	}
 
 	//通讯层发送消息
 	//启动状态机
-	conn, err := t.listeningPoint.getConn(t.hop)
-	if conn != nil {
-		t.conn = conn
-		t.originalRequestBytes = t.originalRequest.ToBytes()
-		err = sendMessage(t.conn, t.originalRequestBytes, t)
-	}
+	t.conn = conn
+	t.originalRequestBytes = t.originalRequest.ToBytes()
+	err := sendMessage(t.conn, t.originalRequestBytes, t)
 
 	if err != nil {
 		t.terminated()

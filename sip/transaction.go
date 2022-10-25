@@ -2,7 +2,6 @@ package sip
 
 import (
 	"net"
-	"sync"
 )
 
 const (
@@ -162,7 +161,7 @@ type UnInviteClientStateMachine struct {
 	timerE *timerE
 	timerF *timerF
 	timerK *timerK
-	mutex  sync.Mutex
+	//mutex  sync.Mutex
 }
 
 func (ic *UnInviteClientStateMachine) setState2(state int) {
@@ -201,8 +200,8 @@ func (ic *UnInviteClientStateMachine) setState2(state int) {
 	}
 }
 func (ic *UnInviteClientStateMachine) setState(state int) {
-	ic.mutex.Lock()
-	defer ic.mutex.Unlock()
+	//ic.mutex.Lock()
+	//defer ic.mutex.Unlock()
 	ic.setState2(state)
 }
 

@@ -146,6 +146,10 @@ func (via *Via) MAddr() string {
 	return via.mAddr
 }
 
+func (via *Via) SetTransport(transport string) {
+	via.transport = transport
+}
+
 func (via *Via) SetBranch(branch string) {
 	via.setBranch(branch)
 }

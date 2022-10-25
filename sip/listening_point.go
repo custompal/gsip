@@ -74,6 +74,13 @@ func (l *ListeningPoint) getConn(hop *Hop) (net.Conn, error) {
 	}
 }
 
+func (l *ListeningPoint) GetTcpClient(hop *Hop) (net.Conn, error) {
+	tcpClient := &TCPClient{}
+	tcpClient.setHandler(l)
+	conn, err := tcpClient.dial(fmt.Sprintf("%s:%d", hop.IP, hop.Port))
+	return conn, err
+}
+
 func (l *ListeningPoint) NewClientTransaction(request *Request) (*ClientTransaction, error) {
 	return l.NewClientTransactionWithTimeout(request, l.sipStack.Options.RequestTimeout)
 }
