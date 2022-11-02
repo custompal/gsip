@@ -179,6 +179,10 @@ func (d *Dialog) GetDialogId() string {
 	return string(d.dialogId)
 }
 
+func (d *Dialog) Confirmed() {
+	d.state = dialogStateConfirmed
+}
+
 func (d *Dialog) Terminated() {
 	d.state = dialogStateTerminated
 }

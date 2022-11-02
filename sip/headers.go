@@ -108,6 +108,13 @@ type Via struct {
 	files map[string]string
 }
 
+func NewVia() *Via {
+	m := make(map[string]string, 5)
+	m["rport"] = ""
+	m["received"] = ""
+	return &Via{sipVersion: SipVersion, files: m}
+}
+
 func (via *Via) FindFiled(key string) (string, bool) {
 	s, ok := via.files[key]
 	return s, ok
@@ -156,6 +163,12 @@ func (via *Via) SetBranch(branch string) {
 func (via *Via) setBranch(branch string) {
 	via.branch = branch
 	via.files["branch"] = branch
+}
+func (via *Via) SetSendBy(hostPort *HostPort) {
+	via.sendBy = *hostPort
+}
+func (via *Via) SetReceived(received string) {
+	via.setReceived(received)
 }
 func (via *Via) setReceived(received string) {
 	via.received = received
